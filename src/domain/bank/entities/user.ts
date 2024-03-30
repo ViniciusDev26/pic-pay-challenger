@@ -1,4 +1,4 @@
-import { Entity } from '../../core/entities/Entity'
+import { Entity } from '../../../core/entities/Entity'
 import { type UserType } from './user-types'
 import { Email } from './value-objects/email'
 

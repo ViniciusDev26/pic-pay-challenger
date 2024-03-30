@@ -1,5 +1,6 @@
-import { Entity } from '../../core/entities/Entity'
-import { type Optional } from '../../core/types/optional'
+import { type Optional } from '@prisma/client/runtime/library'
+
+import { Entity } from '../../../core/entities/Entity'
 
 interface TransferProps {
   payerId: string

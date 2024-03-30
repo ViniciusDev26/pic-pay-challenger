@@ -1,4 +1,4 @@
-import { Entity } from '../../core/entities/Entity'
+import { Entity } from '../../../core/entities/Entity'
 
 interface WalletProps {
   balance: number
