@@ -1,13 +1,7 @@
-import { Entity } from '../../core/entities/Entity'
+import { User } from './user'
 
 interface CommonUserProps {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
   cpf: string
 }
 
-export class CommonUser extends Entity<CommonUserProps> {
-
-}
+export class CommonUser extends User<CommonUserProps> {}
