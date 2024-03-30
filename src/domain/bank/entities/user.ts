@@ -1,4 +1,5 @@
 import { Entity } from '@/core/entities/Entity'
+import { type UniqueEntityId } from '@/core/entities/UniqueEntityId'
 
 import { type UserType } from './user-types'
 import { Email } from './value-objects/email'
@@ -14,8 +15,8 @@ export interface UserProps {
 export abstract class User<T> extends Entity<UserProps & T> {
   emailObject: Email
 
-  constructor (props: UserProps & T) {
-    super(props)
+  constructor (props: UserProps & T, id?: UniqueEntityId) {
+    super(props, id)
     const email = new Email(props.email)
     this.emailObject = email
   }
