@@ -3,6 +3,7 @@ import z from 'zod'
 
 import { MakeTransfer } from '@/domain/bank/usecases/make-transfer'
 
+import { env } from '../config/env'
 import { PrismaConnection } from '../database/prisma/connection'
 import { PrismaDataUtils } from '../database/prisma/prisma-data-utils'
 import { PrismaTransferRepository } from '../database/prisma/prisma-transfer-repository'
@@ -33,7 +34,7 @@ server.post('/transaction', async (request) => {
 })
 
 server.listen({
-  port: 3000
+  port: env.PORT
 }, () => {
   console.log('Server is running on port 3000')
 })
