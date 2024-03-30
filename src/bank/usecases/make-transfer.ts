@@ -1,5 +1,8 @@
+import { type DataUtil } from '../contracts/repositories/DataUtil'
+import { type TransferRepository } from '../contracts/repositories/TransferRepository'
 import { type UserRepository } from '../contracts/repositories/UserRepository'
 import { type WalletRepository } from '../contracts/repositories/WalletRepository'
+import { Transfer } from '../entities/transfer'
 import { UserType } from '../entities/user-types'
 
 interface MakeTransferParams {
@@ -11,7 +14,9 @@ interface MakeTransferParams {
 export class MakeTransfer {
   constructor (
     private readonly userRepository: UserRepository,
-    private readonly walletRepository: WalletRepository
+    private readonly walletRepository: WalletRepository,
+    private readonly transferRepository: TransferRepository,
+    private readonly dataUtil: DataUtil
   ) {}
 
   async execute (params: MakeTransferParams): Promise<void> {
@@ -28,9 +33,16 @@ export class MakeTransfer {
     payerWallet.withdraw(params.amount)
     payeeWallet.deposit(params.amount)
 
-    await this.walletRepository.performTransaction([
+    const transfer = new Transfer({
+      payerId: params.payerId,
+      payeeId: params.payeeId,
+      amount: params.amount
+    })
+
+    await this.dataUtil.performTransaction([
       this.walletRepository.save(payerWallet),
-      this.walletRepository.save(payeeWallet)
+      this.walletRepository.save(payeeWallet),
+      this.transferRepository.save(transfer)
     ])
   }
 }
