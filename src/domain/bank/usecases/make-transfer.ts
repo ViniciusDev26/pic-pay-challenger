@@ -20,6 +20,8 @@ export class MakeTransfer {
   ) {}
 
   async execute (params: MakeTransferParams): Promise<void> {
+    if (params.payeeId === params.payerId) throw new Error('Payer and payee cannot be the same user')
+
     const payerUser = await this.userRepository.getUserById(params.payerId)
     if (!payerUser) throw new Error('Payer not found')
     if (payerUser.type === UserType.SHOPKEEPER) throw new Error('Payer cannot make a transfer, because it is a shopkeeper')
