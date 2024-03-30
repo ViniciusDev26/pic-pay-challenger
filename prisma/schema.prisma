@@ -19,7 +19,7 @@ enum UserType {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id
   firstName String
   lastName  String
   document  String   @unique
@@ -29,5 +29,35 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  wallet   Wallet?
+  payments Transfer[] @relation(name: "payer")
+  deposits Transfer[] @relation(name: "payee")
+
   @@map("users")
+}
+
+model Wallet {
+  id        String   @id
+  balance   Float
+  userId    String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("wallets")
+}
+
+model Transfer {
+  id        String   @id
+  amount    Float
+  payerId   String   @map("payer_id")
+  payeeId   String   @map("payee_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  payer User @relation(name: "payer", fields: [payerId], references: [id])
+  payee User @relation(name: "payee", fields: [payeeId], references: [id])
+
+  @@map("transfers")
 }

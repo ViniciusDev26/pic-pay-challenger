@@ -1,8 +1,9 @@
 import { Entity } from '@/core/entities/Entity'
+import { type UniqueEntityId } from '@/core/entities/UniqueEntityId'
 
 interface WalletProps {
   balance: number
-  userId: string
+  userId: UniqueEntityId
 }
 
 export class Wallet extends Entity<WalletProps> {
@@ -10,7 +11,7 @@ export class Wallet extends Entity<WalletProps> {
     return this.props.balance
   }
 
-  get userId (): string {
+  get userId (): UniqueEntityId {
     return this.props.userId
   }
 

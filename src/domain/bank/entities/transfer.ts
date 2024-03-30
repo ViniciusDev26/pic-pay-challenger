@@ -15,4 +15,16 @@ export class Transfer extends Entity<TransferProps> {
       ocurredAt: props.ocurredAt ?? new Date()
     })
   }
+
+  get payerId (): string {
+    return this.props.payerId
+  }
+
+  get payeeId (): string {
+    return this.props.payeeId
+  }
+
+  get amount (): number {
+    return this.props.amount
+  }
 }

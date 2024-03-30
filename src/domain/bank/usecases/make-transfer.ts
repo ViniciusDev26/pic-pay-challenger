@@ -1,4 +1,4 @@
-import { type DataUtil } from '../contracts/repositories/DataUtil'
+import { type DataUtils } from '../contracts/data-utils'
 import { type TransferRepository } from '../contracts/repositories/TransferRepository'
 import { type UserRepository } from '../contracts/repositories/UserRepository'
 import { type WalletRepository } from '../contracts/repositories/WalletRepository'
@@ -16,7 +16,7 @@ export class MakeTransfer {
     private readonly userRepository: UserRepository,
     private readonly walletRepository: WalletRepository,
     private readonly transferRepository: TransferRepository,
-    private readonly dataUtil: DataUtil
+    private readonly dataUtils: DataUtils
   ) {}
 
   async execute (params: MakeTransferParams): Promise<void> {
@@ -39,10 +39,16 @@ export class MakeTransfer {
       amount: params.amount
     })
 
-    await this.dataUtil.performTransaction([
-      this.walletRepository.save(payerWallet),
-      this.walletRepository.save(payeeWallet),
-      this.transferRepository.save(transfer)
-    ])
+    try {
+      await this.dataUtils.beginTransaction()
+
+      await this.walletRepository.save(payerWallet)
+      await this.walletRepository.save(payeeWallet)
+      await this.transferRepository.save(transfer)
+
+      await this.dataUtils.commitTransaction()
+    } catch (err) {
+      await this.dataUtils.rollbackTransaction()
+    }
   }
 }
