@@ -28,7 +28,9 @@ export class MakeTransfer {
     payerWallet.withdraw(params.amount)
     payeeWallet.deposit(params.amount)
 
-    await this.walletRepository.save(payerWallet)
-    await this.walletRepository.save(payeeWallet)
+    await this.walletRepository.performTransaction([
+      this.walletRepository.save(payerWallet),
+      this.walletRepository.save(payeeWallet)
+    ])
   }
 }
