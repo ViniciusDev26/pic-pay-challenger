@@ -1,15 +1,17 @@
 import { type PrismaClient } from '@prisma/client'
 
+import { type DataUtils } from '@/domain/bank/contracts/data-utils'
 import { type TransferRepository } from '@/domain/bank/contracts/repositories/TransferRepository'
 import { type Transfer } from '@/domain/bank/entities/transfer'
 
 export class PrismaTransferRepository implements TransferRepository {
   constructor (
-    private readonly prisma: PrismaClient
+    private readonly prisma: PrismaClient,
+    private readonly dataUtils: DataUtils
   ) {}
 
   async save (transfer: Transfer): Promise<void> {
-    await this.prisma.transfer.upsert({
+    const promise = this.prisma.transfer.upsert({
       where: {
         id: transfer.id.value
       },
@@ -22,5 +24,7 @@ export class PrismaTransferRepository implements TransferRepository {
         amount: transfer.amount
       }
     })
+
+    await this.dataUtils.executeOperation(promise)
   }
 }

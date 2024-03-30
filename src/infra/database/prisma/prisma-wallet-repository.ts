@@ -1,4 +1,5 @@
 import { UniqueEntityId } from '@/core/entities/UniqueEntityId'
+import { type DataUtils } from '@/domain/bank/contracts/data-utils'
 import { type WalletRepository } from '@/domain/bank/contracts/repositories/WalletRepository'
 import { Wallet } from '@/domain/bank/entities/wallet'
 
@@ -6,7 +7,8 @@ import { type PrismaConnection } from './connection'
 
 export class PrismaWalletRepository implements WalletRepository {
   constructor (
-    private readonly prisma: PrismaConnection
+    private readonly prisma: PrismaConnection,
+    private readonly dataUtils: DataUtils
   ) {}
 
   async getWalletByUserId (userId: string): Promise<Wallet | null> {
@@ -38,8 +40,6 @@ export class PrismaWalletRepository implements WalletRepository {
       }
     })
 
-    await this.prisma.executeOperation(
-      promise
-    )
+    await this.dataUtils.executeOperation(promise)
   }
 }
