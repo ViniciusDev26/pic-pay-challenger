@@ -1,12 +1,17 @@
-import { type PrismaClient } from '@prisma/client'
+import { inject, injectable } from 'tsyringe'
 
 import { type DataUtils } from '@/domain/bank/contracts/data-utils'
 import { type TransferRepository } from '@/domain/bank/contracts/repositories/TransferRepository'
 import { type Transfer } from '@/domain/bank/entities/transfer'
 
+import { PrismaConnection } from './connection'
+
+@injectable()
 export class PrismaTransferRepository implements TransferRepository {
   constructor (
-    private readonly prisma: PrismaClient,
+    @inject(PrismaConnection)
+    private readonly prisma: PrismaConnection,
+    @inject('DataUtils')
     private readonly dataUtils: DataUtils
   ) {}
 

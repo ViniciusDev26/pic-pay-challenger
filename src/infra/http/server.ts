@@ -1,23 +1,16 @@
+import 'reflect-metadata'
+
 import fastify from 'fastify'
 import z from 'zod'
 
 import { MakeTransfer } from '@/domain/bank/usecases/make-transfer'
 
 import { env } from '../config/env'
-import { PrismaConnection } from '../database/prisma/connection'
-import { PrismaDataUtils } from '../database/prisma/prisma-data-utils'
-import { PrismaTransferRepository } from '../database/prisma/prisma-transfer-repository'
-import { PrismaUserRepository } from '../database/prisma/prisma-user-repository'
-import { PrismaWalletRepository } from '../database/prisma/prisma-wallet-repository'
+import { container } from '../config/tsyringe-container'
 
 const server = fastify()
 
-const prisma = new PrismaConnection()
-const dataUtils = new PrismaDataUtils(prisma)
-const userRepository = new PrismaUserRepository(prisma)
-const walletRepository = new PrismaWalletRepository(prisma, dataUtils)
-const transferRepository = new PrismaTransferRepository(prisma, dataUtils)
-const makeTransfer = new MakeTransfer(userRepository, walletRepository, transferRepository, dataUtils)
+const makeTransfer = container.resolve(MakeTransfer)
 
 server.post('/transaction', async (request) => {
   const bodySchema = z.object({
@@ -25,6 +18,7 @@ server.post('/transaction', async (request) => {
     payerId: z.string(),
     payeeId: z.string()
   })
+  console.log(makeTransfer)
   const data = bodySchema.parse(request.body)
 
   await makeTransfer.execute({

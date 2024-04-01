@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe'
+
 import { type DataUtils } from '../contracts/data-utils'
 import { type TransferRepository } from '../contracts/repositories/TransferRepository'
 import { type UserRepository } from '../contracts/repositories/UserRepository'
@@ -11,11 +13,16 @@ interface MakeTransferParams {
   amount: number
 }
 
+@injectable()
 export class MakeTransfer {
   constructor (
+    @inject('UserRepository')
     private readonly userRepository: UserRepository,
+    @inject('WalletRepository')
     private readonly walletRepository: WalletRepository,
+    @inject('TransferRepository')
     private readonly transferRepository: TransferRepository,
+    @inject('DataUtils')
     private readonly dataUtils: DataUtils
   ) {}
 
@@ -23,6 +30,8 @@ export class MakeTransfer {
     if (params.payeeId === params.payerId) throw new Error('Payer and payee cannot be the same user')
 
     const payerUser = await this.userRepository.getUserById(params.payerId)
+
+    console.log(payerUser)
     if (!payerUser) throw new Error('Payer not found')
     if (payerUser.type === UserType.SHOPKEEPER) throw new Error('Payer cannot make a transfer, because it is a shopkeeper')
 

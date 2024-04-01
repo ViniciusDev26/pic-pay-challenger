@@ -1,11 +1,14 @@
 import { type PrismaPromise } from '@prisma/client'
+import { inject, injectable } from 'tsyringe'
 
 import { type DataUtils } from '@/domain/bank/contracts/data-utils'
 
-import { type PrismaConnection } from './connection'
+import { PrismaConnection } from './connection'
 
+@injectable()
 export class PrismaDataUtils implements DataUtils {
   constructor (
+    @inject(PrismaConnection)
     private readonly prisma: PrismaConnection
   ) {}
 

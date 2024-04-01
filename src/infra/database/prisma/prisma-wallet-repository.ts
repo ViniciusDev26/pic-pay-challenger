@@ -1,13 +1,18 @@
+import { inject, injectable } from 'tsyringe'
+
 import { UniqueEntityId } from '@/core/entities/UniqueEntityId'
 import { type DataUtils } from '@/domain/bank/contracts/data-utils'
 import { type WalletRepository } from '@/domain/bank/contracts/repositories/WalletRepository'
 import { Wallet } from '@/domain/bank/entities/wallet'
 
-import { type PrismaConnection } from './connection'
+import { PrismaConnection } from './connection'
 
+@injectable()
 export class PrismaWalletRepository implements WalletRepository {
   constructor (
+    @inject(PrismaConnection)
     private readonly prisma: PrismaConnection,
+    @inject('DataUtils')
     private readonly dataUtils: DataUtils
   ) {}
 
